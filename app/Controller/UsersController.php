@@ -22,7 +22,9 @@ class UsersController extends AppController {
 
 	public function login()
 	{
-		$this->layout = "sin_formato";		
+		$this->layout = "sin_formato";
+
+		if ($this->Session->check('Auth')) $this->redirect('/users/logout');
 
 		if (!$this->request->is('post')) return;
 
