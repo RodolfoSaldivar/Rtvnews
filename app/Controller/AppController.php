@@ -73,7 +73,8 @@ class AppController extends Controller {
         }
 
         // Default deny
-        return false;
+        //return false;
+        return true;
     }
 
 
@@ -81,8 +82,8 @@ class AppController extends Controller {
 
 
     public function beforeFilter() {
-        // $this->Auth->allow('');
-        $this->Auth->allow();
+        $this->Auth->allow('');
+        //$this->Auth->allow();
     }
 
 
