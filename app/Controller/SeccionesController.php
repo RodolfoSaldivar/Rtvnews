@@ -1,10 +1,10 @@
 <?php
 App::uses('AppController', 'Controller');
 /**
- * Clientes Controller
+ * Secciones Controller
  *
  */
-class ClientesController extends AppController {
+class SeccionesController extends AppController {
 	
 
 //=========================================================================
@@ -19,12 +19,12 @@ class ClientesController extends AppController {
 
 		$postdata = file_get_contents("php://input");
 		$data = json_decode($postdata, true);
-		$data = $this->descifrarTodo($data)["cliente"];
+		$data = $this->descifrarTodo($data)["seccion"];
 
 		$data["estatus"] = 1;
 
-		$this->Cliente->save($data);
-		$this->Session->setFlash('Cliente guardado exitosamente.');
+		$this->Seccione->save($data);
+		$this->Session->setFlash('Seccion guardada exitosamente.');
 	}
 	
 
@@ -33,22 +33,22 @@ class ClientesController extends AppController {
 
 	public function index()
 	{
-		$clientes = $this->Cliente->todosConPadres(array(), array(), array('Cliente.estatus DESC', 'Cliente.nombre'));
+		$secciones = $this->Seccione->obtenerTodos(array(), array(), array('estatus DESC', 'nombre'));
 		// Para que funcione el switch hay que poner booleano en palabras
-		if ($clientes)
-		foreach ($clientes as $key => $user)
+		if ($secciones)
+		foreach ($secciones as $key => $user)
 		{
-			if ($user["Cliente"]["estatus"] == 0)
-				$clientes[$key]["Cliente"]["estatus"] = false;
-			if ($user["Cliente"]["estatus"] == 1)
-				$clientes[$key]["Cliente"]["estatus"] = true;
+			if ($user["Seccione"]["estatus"] == 0)
+				$secciones[$key]["Seccione"]["estatus"] = false;
+			if ($user["Seccione"]["estatus"] == 1)
+				$secciones[$key]["Seccione"]["estatus"] = true;
 		}
 
-		$variables_php["Clientes"] = $clientes;
+		$variables_php["Secciones"] = $secciones;
 
 		$variables_php = $this->hacerJson($variables_php);
 		$this->set("variables_php", $variables_php);
-		$this->set("guardar_cliente", $this->pathPhp('guardar_cliente'));
+		$this->set("guardar_seccion", $this->pathPhp('guardar_seccion'));
 	}
 	
 
@@ -69,7 +69,7 @@ class ClientesController extends AppController {
 		if ($data["estatus"]) $data["estatus"] = 1;
 		else $data["estatus"] = 0;
 
-		$this->Cliente->save($data);
+		$this->Seccione->save($data);
 	}
 	
 
@@ -87,7 +87,7 @@ class ClientesController extends AppController {
 		$data = json_decode($postdata, true);
 		$condiciones = $this->descifrarTodo($data);
 
-		$cliente = $this->Cliente->unoConPadres($condiciones);
+		$cliente = $this->Seccione->unoConPadres($condiciones);
 		echo $this->hacerJson($cliente);
 	}
 

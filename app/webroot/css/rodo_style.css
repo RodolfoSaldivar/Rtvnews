@@ -111,3 +111,28 @@ div.titulo-modal {
 	left: 7.75rem;
 	position: relative !important;
 }
+
+input[type="color"] {
+	width: 75px;
+	height: 35px;
+}
+
+.nav-wrapper {
+	background-color: #454545;
+}
+
+.btn, .btn-floating, .switch label input[type=checkbox]:checked+.lever:after {
+    background-color: #e89009;
+}
+
+td a i {
+	color: #e89009;
+}
+
+.switch label input[type=checkbox]:checked+.lever, .btn:hover, .btn-floating:hover {
+    background-color: #ffb54a;
+}
+
+.clase_toast {
+	background-color: #e89009;
+}

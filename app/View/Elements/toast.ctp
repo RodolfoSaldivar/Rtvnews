@@ -1,3 +1,3 @@
 
 
-Materialize.toast('<?php printf($message); ?>', 7000, 'clases')
+Materialize.toast('<?php printf($message); ?>', 7000, 'clase_toast')

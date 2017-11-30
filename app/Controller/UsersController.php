@@ -94,7 +94,7 @@ class UsersController extends AppController {
 //=========================================================================
 
 
-	public function guardar($id = 0)
+	public function guardar()
 	{
 		$this->layout = 'ajax';
 		$this->autoRender = false;
