@@ -131,6 +131,7 @@ class UsersController extends AppController {
 		$users = $this->User->obtenerTodos(array(), array(), array('estatus DESC', 'tipo', 'nombre'));
 
 		// Para que funcione el switch hay que poner booleano en palabras
+		if ($users)
 		foreach ($users as $key => $user)
 		{
 			if ($user["User"]["tipo"] == 1)

@@ -68,14 +68,12 @@ app.controller("ModalGuardarUsuario", function($scope, $rootScope, $http)
 	$scope.modal_abierto = 0;
 	$scope.inicializar = function(abriendo = 0)
 	{
-		$scope.$apply(function()
-		{
-			if ($scope.modal_abierto && abriendo) return;
-			$scope.modal_abierto = 1;
-			$scope.user = {tipo:'nada'};
-			resetSelect();
-		});	
-	} 
+		if ($scope.modal_abierto && abriendo) return;
+		$scope.modal_abierto = 1;
+		$scope.user = {tipo:'nada'};
+		resetSelect();
+		$scope.$apply();
+	}
 
 
 	$("#us_username").donetyping(function(){

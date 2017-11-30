@@ -67,6 +67,7 @@ class AppModel extends Model {
 
             if (
                 substr($atributo, -3) == "_id" ||
+                substr($atributo, -3) == ".id" ||
                 strval($atributo) == "id"
             )
             {

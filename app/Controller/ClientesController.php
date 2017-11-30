@@ -1,6 +1,5 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 /**
  * Clientes Controller
  *
@@ -23,9 +22,9 @@ class ClientesController extends AppController {
 		$data = $this->descifrarTodo($data)["cliente"];
 
 		$data["estatus"] = 1;
-echo json_encode($data);
-		// $this->Cliente->save($data);
-		// $this->Session->setFlash('Usuario guardado exitosamente.');
+
+		$this->Cliente->save($data);
+		$this->Session->setFlash('Cliente guardado exitosamente.');
 	}
 	
 
@@ -34,9 +33,9 @@ echo json_encode($data);
 
 	public function index()
 	{
-		$clientes = $this->Cliente->obtenerTodos(array(), array(), array('estatus DESC', 'nombre'));
-
+		$clientes = $this->Cliente->todosConPadres(array(), array(), array('Cliente.estatus DESC', 'Cliente.nombre'));
 		// Para que funcione el switch hay que poner booleano en palabras
+		if ($clientes)
 		foreach ($clientes as $key => $user)
 		{
 			if ($user["Cliente"]["estatus"] == 0)
@@ -88,9 +87,8 @@ echo json_encode($data);
 		$data = json_decode($postdata, true);
 		$condiciones = $this->descifrarTodo($data);
 
-		$usuario = $this->User->find('first', array('conditions' => $condiciones));
-		$usuario["User"]["id_c"] = $this->User->cifrar($usuario["User"]["id"]);
-		echo $this->hacerJson($usuario);
+		$cliente = $this->Cliente->unoConPadres($condiciones);
+		echo $this->hacerJson($cliente);
 	}
 
 

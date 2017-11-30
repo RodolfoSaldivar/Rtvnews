@@ -1,6 +1,5 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 /**
  * Media Model
  *
@@ -41,5 +40,10 @@ class Media extends AppModel {
 
 //=========================================================================
 
+
+	public $useTable = 'medias';
+
+
+//=========================================================================
 
 }
