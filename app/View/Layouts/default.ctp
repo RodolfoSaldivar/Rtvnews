@@ -26,19 +26,25 @@
 	<nav>
 		<div class="nav-wrapper">
 			<a class="brand-logo">Logo</a>
-			<!-- activate side-bav in mobile view -->
-			<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-			<ul class="right hide-on-med-and-down">
-				<li><a>Sass</a></li>
-				<li><a>Components</a></li>
+			<ul class="right">
+				<li>
+					<a href="/users">Usuarios</a>
+				</li>
+				<li>
+					<a href="/clientes">Clientes</a>
+				</li>
+				<li>
+					<a href="/secciones">Secciones</a>
+				</li>
+				<li>
+					<a href="/notas">Notas</a>
+				</li>
+				<li>
+					<a href="/sintesis">Síntesis</a>
+				</li>
 				<li>
 					<a class="waves-effect waves-light btn" href="/users/logout">Cerrar Sesión</a>
 				</li>
-			</ul>
-			<!-- navbar for mobile -->
-			<ul class="side-nav" id="mobile-demo">
-				<li><a>Sass</a></li>
-				<li><a>Components</a></li>
 			</ul>
 		</div>
 	</nav>

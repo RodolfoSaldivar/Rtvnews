@@ -96,42 +96,30 @@ class UsersController extends AppController {
 
 	public function guardar($id = 0)
 	{
-		if ($this->request->is('post'))
+		$this->layout = 'ajax';
+		$this->autoRender = false;
+
+		if (!$this->request->is('post')) return;
+
+		$postdata = file_get_contents("php://input");
+		$data = json_decode($postdata, true);
+		$data = $this->descifrarTodo($data)["user"];
+
+		$data["token"] = $this->token();
+		$data["estatus"] = 1;
+
+		if ($data["id"])
 		{
-			$data = $this->descifrarTodo($this->request->data);
-
-			$data["User"]["token"] = $this->token();
-			$data["User"]["estatus"] = 1;
-
-			if ($data["User"]["id"])
-			{
-				$contra_bdd = $this->User->find('first', array(
-					'conditions' => array('id' => $data["User"]["id"]),
-					'fields' => array('password')
-				))["User"]["password"];
-
-				if ($contra_bdd == $data["User"]["password"])
-					unset($data["User"]["password"]);
-			}
-				
-			$this->User->save($data);
-			$this->redirect("/users");
-		}
-
-		if ($id)
-		{
-			$user = $this->User->obtener(array('id' => $this->descifrar($id)));
-			$user["User"]["password"] = $this->User->find('first', array(
-				'conditions' => array('id' => $this->descifrar($id)),
+			$contra_bdd = $this->User->find('first', array(
+				'conditions' => array('id' => $data["id"]),
 				'fields' => array('password')
 			))["User"]["password"];
-			$variables_php = $user;
-		}
-		else
-			$variables_php["User"] = array('tipo' => 'nada');
 
-		$variables_php = $this->hacerJson($variables_php);
-		$this->set("variables_php", $variables_php);
+			if ($contra_bdd == $data["password"]) unset($data["password"]);
+		}
+			
+		$this->User->save($data);
+		$this->Session->setFlash('Usuario guardado exitosamente.');
 	}
 	
 
@@ -140,14 +128,15 @@ class UsersController extends AppController {
 
 	public function index()
 	{
-		$users = $this->User->obtenerTodos(array(), array(), array('estatus DESC'));
+		$users = $this->User->obtenerTodos(array(), array(), array('estatus DESC', 'tipo', 'nombre'));
 
+		// Para que funcione el switch hay que poner booleano en palabras
 		foreach ($users as $key => $user)
 		{
 			if ($user["User"]["tipo"] == 1)
 				$users[$key]["User"]["tipo"] = "Administrador";
 			if ($user["User"]["tipo"] == 2)
-				$users[$key]["User"]["tipo"] = "Cliente";
+				$users[$key]["User"]["tipo"] = "Usuario";
 			if ($user["User"]["estatus"] == 0)
 				$users[$key]["User"]["estatus"] = false;
 			if ($user["User"]["estatus"] == 1)
@@ -158,6 +147,7 @@ class UsersController extends AppController {
 
 		$variables_php = $this->hacerJson($variables_php);
 		$this->set("variables_php", $variables_php);
+		$this->set("guardar_usuario", $this->pathPhp('guardar_usuario'));
 	}
 	
 
@@ -179,6 +169,26 @@ class UsersController extends AppController {
 		else $data["estatus"] = 0;
 
 		$this->User->save($data);
+	}
+	
+
+//=========================================================================
+
+
+	public function obtener()
+	{
+		$this->layout = 'ajax';
+		$this->autoRender = false;
+
+		if (!$this->request->is('post')) return 0;
+
+		$postdata = file_get_contents("php://input");
+		$data = json_decode($postdata, true);
+		$condiciones = $this->descifrarTodo($data);
+
+		$usuario = $this->User->find('first', array('conditions' => $condiciones));
+		$usuario["User"]["id_c"] = $this->User->cifrar($usuario["User"]["id"]);
+		echo $this->hacerJson($usuario);
 	}
 
 

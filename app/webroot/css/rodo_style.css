@@ -81,20 +81,6 @@ a.hasta_arriba {
     100% { opacity: 1.0; }
 }
 
-.modal {
-	width: 90% !important;
-	height: 90% !important;
-	max-height: 90% !important;
-	top: 5% !important;
-}
-
-.modal_chico {
-	width: 70% !important;
-	height: 70% !important;
-	max-height: 70% !important;
-	top: 15% !important;
-}
-
 .preloader-wrapper.small {
     width: 27px;
     height: 27px;
@@ -108,4 +94,20 @@ input.valid:not([type]), input.valid:not([type]):focus, input[type=text].valid:n
 
 .margin_bottom_30 {
 	margin-bottom: 30px;
+}
+
+.modal {
+	width: 40% !important;
+}
+
+div.titulo-modal {
+    padding: 12px 24px 12px 24px;
+    margin: -24px -24px 0px -24px;    
+    background-color: #4b4b4b;
+    color: #ffffff;
+}
+
+#input_logo-error {
+	left: 7.75rem;
+	position: relative !important;
 }

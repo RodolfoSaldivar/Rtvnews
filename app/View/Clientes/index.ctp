@@ -1,14 +1,14 @@
 
 
-<div ng-controller="UsersIndex">
+<div ng-controller="ClientesIndex">
 
 <!-- //========================================================================= -->
 
 <div class="row">
 	<div class="col s12 valign-wrapper">
-		<h4 class="left">Usuarios</h4>
+		<h4 class="left">Clientes</h4>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<a class="btn-floating btn-peque waves-effect waves-light pulse modal-trigger" href="#modal_guardar_usuario">
+		<a class="btn-floating btn-peque waves-effect waves-light pulse modal-trigger" href="#modal_guardar_cliente">
 			<i class="material-icons">add</i>
 		</a>
 	</div>
@@ -17,31 +17,29 @@
 <table>
 	<thead>
 		<tr>
+			<th>Logo</th>
 			<th>Nombre</th>
-			<th>Username</th>
-			<th>Tipo</th>
 			<th class="center">Activo</th>
 			<th></th>
 		</tr>
 	</thead>
 
 	<tbody>
-		<tr ng-repeat="(key, user) in users">
-			<td>{{ user.User.nombre }}</td>
-			<td>{{ user.User.username }}</td>
-			<td>{{ user.User.tipo }}</td>
+		<tr ng-repeat="(key, cliente) in clientes">
+			<td>{{ cliente.Cliente.media_id }}</td>
+			<td>{{ cliente.Cliente.nombre }}</td>
 			<td class="center">
 				<div class="switch">
 					<label>
 						No
-						<input type="checkbox" ng-model="user.User.estatus" ng-checked="user.User.estatus" ng-change="actualizarEstatus(user.User.id_c, user.User.estatus)">
+						<input type="checkbox" ng-model="cliente.Cliente.estatus" ng-checked="cliente.Cliente.estatus" ng-change="actualizarEstatus(cliente.Cliente.id_c, cliente.Cliente.estatus)">
 						<span class="lever"></span>
 						Si
 					</label>
 				</div>
 			</td>
 			<td>
-				<a ng-click="editar(user.User.id_c)" class="pointer">
+				<a ng-click="editar(cliente.Cliente.id_c)" class="pointer">
 					<i class="material-icons right">edit</i>
 				</a>
 			</td>
@@ -49,7 +47,7 @@
 	</tbody>
 </table>
 
-<?php include $guardar_usuario; ?>
+<?php include $guardar_cliente; ?>
 
 <!-- //========================================================================= -->
 
@@ -60,5 +58,5 @@
 	variables_php = <?php echo $variables_php ?>;
 <?php $this->Html->scriptEnd(); ?>
 
-<?php $this->Html->script('index_usuarios', array('inline' => false)); ?>
-<?php $this->Html->script('guardar_usuario', array('inline' => false)); ?>
+<?php $this->Html->script('index_clientes', array('inline' => false)); ?>
+<?php $this->Html->script('guardar_cliente', array('inline' => false)); ?>

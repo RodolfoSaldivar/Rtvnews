@@ -33,7 +33,6 @@ $.validator.messages.maxlength = "*Máximo {0} caracteres";
 
 
 $(document).ready(function(){
-	$('.collapsible').collapsible();
 	resetSelect();
 	resetDrop();
 });
@@ -98,4 +97,9 @@ function validarSelects(forma, atributos)
 	});
 
 	return correcto;
+}
+
+// Llamar al toast
+function toast(mensaje, segundos = 5) {
+	Materialize.toast(mensaje, segundos * 1000)
 }
