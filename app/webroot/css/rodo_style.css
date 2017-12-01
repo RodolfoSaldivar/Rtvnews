@@ -136,3 +136,12 @@ td a i {
 .clase_toast {
 	background-color: #e89009;
 }
+
+#agregar_medias .btn i {
+	font-size: 2.3rem;
+	color: #454545;
+}
+
+#agregar_medias a.btn {
+	background-color: transparent;
+}

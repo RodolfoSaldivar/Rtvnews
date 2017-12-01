@@ -48,6 +48,7 @@
 		</tr>
 	</tbody>
 </table>
+<br><br><br>
 
 <?php include $guardar_usuario; ?>
 

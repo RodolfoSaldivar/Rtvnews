@@ -60,7 +60,7 @@ class ClientesController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 
-		if (!$this->request->is('post')) return 0;
+		if (!$this->request->is('post')) return;
 
 		$postdata = file_get_contents("php://input");
 		$data = json_decode($postdata, true);
@@ -81,7 +81,7 @@ class ClientesController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 
-		if (!$this->request->is('post')) return 0;
+		if (!$this->request->is('post')) return;
 
 		$postdata = file_get_contents("php://input");
 		$data = json_decode($postdata, true);

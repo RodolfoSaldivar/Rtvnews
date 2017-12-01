@@ -60,7 +60,7 @@ class SeccionesController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 
-		if (!$this->request->is('post')) return 0;
+		if (!$this->request->is('post')) return;
 
 		$postdata = file_get_contents("php://input");
 		$data = json_decode($postdata, true);
@@ -81,14 +81,14 @@ class SeccionesController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 
-		if (!$this->request->is('post')) return 0;
+		if (!$this->request->is('post')) return;
 
 		$postdata = file_get_contents("php://input");
 		$data = json_decode($postdata, true);
 		$condiciones = $this->descifrarTodo($data);
 
-		$cliente = $this->Seccione->unoConPadres($condiciones);
-		echo $this->hacerJson($cliente);
+		$seccion = $this->Seccione->unoConPadres($condiciones);
+		echo $this->hacerJson($seccion);
 	}
 
 
