@@ -10,13 +10,100 @@ class NotasController extends AppController {
 //=========================================================================
 
 
-	public function index()
+	public function guardar($nota_id = 0)
 	{
 		$this->loadModel('Seccione');
 		$this->loadModel('Cliente');
+		$this->loadModel('Media');
 
-		$secciones = $this->Seccione->obtenerTodos();
-		$clientes = $this->Cliente->obtenerTodos();
+		//----> Cuando se hace el post
+		if ($this->request->is('post'))
+		{
+			$data = $this->request->data;
+			$data = $this->descifrarTodo($data);
+			// var_dump($data);
+			date_default_timezone_set('America/Mexico_City');
+			$data["Nota"]["fecha"] = date('Ymd');
+			$data["Nota"]["estatus"] = 1;
+			$nota_id = $this->Nota->save($data["Nota"])["Nota"]["id"];
+
+			//----> Borra de las carpetas y de la BDD todos los archivos que hay
+			$medias_guardadas = $this->Media->find('list', array(
+				'conditions' => array('nota_id' => $nota_id),
+				'fields' => 'id'
+			));
+
+			if (@$data["Media"])
+			foreach ($data["Media"] as $tipo => $medias)
+			{
+				foreach ($medias as $key => $media)
+				{
+					//----> Quita el ide del arreglo para que despues no lo borre
+					if (in_array($media["id"], $medias_guardadas))
+					{
+						unset($medias_guardadas[$media["id"]]);
+						continue;
+					}
+					if (empty($media["desplegar"]) || empty($media["nombre"])) continue;
+
+					$media["nota_id"] = $nota_id;
+					$media["tipo"] = $tipo;
+					$ruta = APP.'/medias';
+					if ($tipo == 2 || $tipo == 3 || $tipo == 4)
+					{
+						switch ($tipo)
+						{
+							case 2: $ruta.= '/pdf/'; break;
+							case 3: $ruta.= '/videos/'; break;
+							case 4: $ruta.= '/voz/'; break;
+						}
+						$media["nombre"] = $this->Media->guardarEnCarpeta($media["nombre"], $ruta);
+						$this->Media->create();
+						$this->Media->save($media);
+					}
+
+					if ($tipo == 5)
+					{
+						$this->Media->create();
+						$this->Media->save($media);
+					}
+				}
+			}
+
+			$medias_borrar = $this->Media->obtenerTodos(array('id' => $medias_guardadas));
+			if ($medias_borrar)
+			foreach ($medias_borrar as $key => $media)
+			{
+				switch ($media["Media"]["tipo"])
+				{
+					case 2: $tipo = 'pdf'; break;
+					case 3: $tipo = 'videos'; break;
+					case 4: $tipo = 'voz'; break;
+				}
+				$ruta_borrar = APP."/medias/$tipo/".$media["Media"]["nombre"];
+				$file = new File($ruta_borrar);
+				$file->delete();
+				$this->Media->delete($media["Media"]["id"], false);
+			}
+
+			$this->Session->setFlash('Nota guardada exitosamente.');
+			$this->redirect("/notas/guardar");
+		}
+
+		//----> Cuando hay get y edita
+		if ($nota_id)
+		{
+			$nota_id = $this->descifrar($nota_id);
+			$nota = $this->Nota->unoConPadres(array('Nota.id' => $nota_id));
+			$medias = $this->Media->obtenerTodos(array('nota_id' => $nota_id));
+			foreach ($medias as $key => $media)
+				$nota["Medias"][$media["Media"]["id_c"]] = $media["Media"]["tipo"];
+		}
+		else
+			$nota["Nota"] = array('seccion' => 'nada', 'tipo' => 'nada', 'calificacion' => 'nada');
+
+		$secciones = $this->Seccione->obtenerTodos(array('estatus' => 1));
+		$clientes = $this->Cliente->obtenerTodos(array('estatus' => 1));
 
 		$clientes_auto = array();
 		if ($clientes)
@@ -25,17 +112,13 @@ class NotasController extends AppController {
 
 		$variables_php = array(
 			'clientes_autocompletar' => $clientes_auto,
-			'secciones' => $secciones
+			'secciones' => $secciones,
+			'nota' => $nota
 		);
 		$variables_php = $this->hacerJson($variables_php);
 		$this->set("variables_php", $variables_php);
 		$this->set("preloader", $this->pathPhp('preloader'));
-		$this->set("guardar_cliente", $this->pathPhp('guardar_cliente'));
-
-		if (!$this->request->is('post')) return;
-
-		$data = $this->request->data;
-		var_dump($data);
+		$this->set("guardar_cliente", $this->pathPhp('guardar_cliente'));			
 	}
 	
 
@@ -45,6 +128,7 @@ class NotasController extends AppController {
 	public function agregar_media()
 	{
 		$this->layout = 'ajax';
+		$this->loadModel("Media");
 
 		if (!$this->request->is('post')) return;
 
@@ -58,6 +142,15 @@ class NotasController extends AppController {
 			case 4: $data["nombre"] = 'Audio'; break;
 			case 5: $data["nombre"] = 'Link'; break;
 		}
+		if ($data["id_c"] === 0) $data["disabled"] = 0;
+		else
+		{
+			$data["disabled"] = 1;
+			$media = $this->Media->obtener(array('id' => $this->descifrar($data["id_c"])))["Media"];
+			$media["nombre"] = substr($media["nombre"], 14);
+			$data["Media"] = $media;
+		}
+		$data["name"] = 'data[Media]['.$data["tipo"].']['.$data["acum"].']';
 		$this->set("data", $data);
 	}
 

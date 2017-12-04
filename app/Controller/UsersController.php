@@ -41,7 +41,7 @@ class UsersController extends AppController {
 			return;
 		}
 
-		$this->redirect("/users");
+		$this->redirect($this->Auth->redirectUrl());
 	}
 	
 

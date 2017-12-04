@@ -119,7 +119,7 @@ app.controller("ModalGuardarCliente", function($scope, $rootScope, $http)
 
 		$http({
 			method: 'post',
-			url: '/medias/guardar_ajax',
+			url: '/medias/guardar_logo',
 			data: fd,
 			headers: {'Content-Type': undefined},
 		}).then(function(response)

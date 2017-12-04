@@ -46,4 +46,17 @@ class Media extends AppModel {
 
 //=========================================================================
 
+
+	public function guardarEnCarpeta($file, $ruta)
+	{
+		date_default_timezone_set('America/Mexico_City');
+		$nombre_archivo = date('YmdHis').$file["name"];
+		if(!file_exists($ruta)) mkdir($ruta, 0777, true);
+		move_uploaded_file($file['tmp_name'], $ruta.$nombre_archivo);
+		return $nombre_archivo;
+	}
+
+
+//=========================================================================
+
 }

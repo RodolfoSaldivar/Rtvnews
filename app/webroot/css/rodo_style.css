@@ -145,3 +145,8 @@ td a i {
 #agregar_medias a.btn {
 	background-color: transparent;
 }
+
+.btn-floating.halfway-fab {
+    right: 0px;
+    bottom: -40px;
+}

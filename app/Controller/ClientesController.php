@@ -23,6 +23,15 @@ class ClientesController extends AppController {
 
 		$data["estatus"] = 1;
 
+		//----> Borra la imagen de la carpeta si es que se edita
+		if ($data["id"])
+		{
+			$media_nombre = $this->Cliente->unoConPadres(array('Cliente.id' => $data["id"]))["Media"]["nombre"];
+			$ruta_borrar = WWW_ROOT."/img/logos/$media_nombre";
+			$file = new File($ruta_borrar);
+			$file->delete();
+		}
+
 		$this->Cliente->save($data);
 		$this->Session->setFlash('Cliente guardado exitosamente.');
 	}

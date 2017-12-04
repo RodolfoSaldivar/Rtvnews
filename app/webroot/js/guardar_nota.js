@@ -13,12 +13,26 @@ app.controller("NotasIndex", function($scope, $rootScope, $http)
 				$scope.clienteObtener(val);
 			}
 		});
-		$scope.nota = {
-			seccion: 'nada',
-			tipo: 'nada',
-			calificacion: 'nada'
-		}
+
+		$scope.nota = $scope.variables_php.nota.Nota;
 		$scope.media = { 2:0, 3:0, 4:0, 5:0 };
+
+		//----> Si viene a editar
+		if ($scope.nota.id_c)
+		{
+			var cliente_nombre = $scope.variables_php.nota.Cliente.nombre;
+			$scope.nota.cliente = cliente_nombre;
+			$scope.clienteObtener(cliente_nombre);
+			$scope.nota.medida_1 = regresarFloat($scope.nota.medida_1);
+			$scope.nota.medida_2 = regresarFloat($scope.nota.medida_2);
+			$scope.nota.medida_3 = regresarFloat($scope.nota.medida_3);
+			var arr_m = Object.keys($scope.variables_php.nota.Medias);
+			for (var i = 0; i < arr_m.length ; i++)
+			{
+				$scope.appendMedia($scope.variables_php.nota.Medias[arr_m[i]], arr_m[i]);
+			}
+		}
+
 		$scope.$apply();
 	});
 
@@ -91,8 +105,10 @@ app.controller("NotasIndex", function($scope, $rootScope, $http)
 		$http.post("/clientes/obtener", { 'Cliente.nombre': nombre })
 		.then(function(response)
 		{
+			var data = response.data;
 			$("#cliente_no_existe").css("display", "none");
-			$('#cliente_img').attr('src', '/img/logos/'+response.data.Media.nombre);
+			$('#cliente_img').attr('src', '/img/logos/'+data.Media.nombre);
+			$scope.nota.cliente_id = data.Cliente.id_c;
 		});
 	}
 
@@ -116,12 +132,19 @@ app.controller("NotasIndex", function($scope, $rootScope, $http)
 
 
 //----> Para agregar medias
-	$scope.appendMedia = function(tipo)
-	{
-		$http.post("/notas/agregar_media", { 'tipo': tipo, acum: $scope.media[tipo] })
+	$scope.appendMedia = function(tipo, id_c = 0)
+	{console.log(id_c);
+		var acum = $scope.media[tipo];
+		$http.post("/notas/agregar_media",
+		{
+			tipo: tipo,
+			acum: acum,
+			id_c: id_c
+		})
 		.then(function(response)
 		{
 			$("#append_"+tipo).append(response.data);
+			if (id_c) $("label[for=media_"+tipo+"_"+acum+"]").addClass("active");
 			$scope.media[tipo]++;
 		});
 	}
@@ -145,3 +168,10 @@ app.controller("NotasIndex", function($scope, $rootScope, $http)
 	});
 
 });
+
+
+//----> Para remover medias
+function removerMedia(html_id)
+{
+	$("#"+html_id).remove();
+}

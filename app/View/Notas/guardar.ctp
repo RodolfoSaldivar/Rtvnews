@@ -9,6 +9,9 @@
 	'autocomplete' => 'off'
 )); ?>
 
+<input class="hide" name="data[Nota][id]" ng-model="nota.id_c">
+<input class="hide" name="data[Nota][cliente_id]" ng-model="nota.cliente_id_c">
+
 <div class="row">
 	<div class="input-field col s4">
 		<input type="text" id="cliente" name="data[Nota][cliente]" ng-model="nota.cliente" class="autocomplete">
@@ -40,7 +43,7 @@
 
 <div class="row">
 	<div class="input-field col s4">
-		<select id="seccion" name="data[Nota][seccion]" ng-model="nota.seccion">
+		<select id="seccion" name="data[Nota][seccione_id]" ng-model="nota.seccione_id_c">
 			<option value="nada" disabled>Seleccione</option>
 			<option ng-repeat="(key, seccion) in variables_php.secciones" value="{{ seccion.Seccione.id_c }}">{{ seccion.Seccione.nombre }}</option>
 		</select>
@@ -217,5 +220,5 @@
 	variables_php = <?php echo $variables_php ?>;
 <?php $this->Html->scriptEnd(); ?>
 
-<?php $this->Html->script('index_notas', array('inline' => false)); ?>
+<?php $this->Html->script('guardar_nota', array('inline' => false)); ?>
 <?php $this->Html->script('guardar_cliente', array('inline' => false)); ?>
