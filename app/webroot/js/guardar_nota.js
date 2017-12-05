@@ -1,7 +1,7 @@
 
 
 
-app.controller("NotasIndex", function($scope, $rootScope, $http)
+app.controller("NotasGuardar", function($scope, $rootScope, $http)
 {
 	$scope.variables_php = variables_php;
 
@@ -29,7 +29,9 @@ app.controller("NotasIndex", function($scope, $rootScope, $http)
 			var arr_m = Object.keys($scope.variables_php.nota.Medias);
 			for (var i = 0; i < arr_m.length ; i++)
 			{
-				$scope.appendMedia($scope.variables_php.nota.Medias[arr_m[i]], arr_m[i]);
+				var tipo = $scope.variables_php.nota.Medias[arr_m[i]];
+				$scope.appendMedia(tipo, arr_m[i]);
+				$scope.media[tipo]++;
 			}
 		}
 
@@ -133,7 +135,7 @@ app.controller("NotasIndex", function($scope, $rootScope, $http)
 
 //----> Para agregar medias
 	$scope.appendMedia = function(tipo, id_c = 0)
-	{console.log(id_c);
+	{
 		var acum = $scope.media[tipo];
 		$http.post("/notas/agregar_media",
 		{

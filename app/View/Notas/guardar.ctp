@@ -1,6 +1,6 @@
 
 
-<div ng-controller="NotasIndex">
+<div ng-controller="NotasGuardar">
 
 <!-- //========================================================================= -->
 

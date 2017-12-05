@@ -150,3 +150,11 @@ td a i {
     right: 0px;
     bottom: -40px;
 }
+
+.picker__date-display, .picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected {
+    background-color: #e89009;
+}
+
+.picker__close, .picker__today, .picker__clear {
+    color: #e89009;
+}

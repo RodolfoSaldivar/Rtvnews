@@ -155,6 +155,29 @@ class NotasController extends AppController {
 		$data["name"] = 'data[Media]['.$data["tipo"].']['.$data["acum"].']';
 		$this->set("data", $data);
 	}
+	
+
+//=========================================================================
+
+
+	public function obtener()
+	{
+		$this->layout = 'ajax';
+		$this->autoRender = false;
+		$this->loadModel("Media");
+
+		if (!$this->request->is('post')) return;
+
+		$postdata = file_get_contents("php://input");
+		$data = json_decode($postdata, true);
+		$condiciones = $this->descifrarTodo($data);
+
+		$notas = $this->Nota->obtenerTodos($condiciones);
+		if ($notas)
+		foreach ($notas as $key => $nota)
+			$notas[$key]["Medias"] = $this->Media->obtenerTodos(array('nota_id' => $nota["Nota"]["id"]));
+		echo $this->hacerJson($notas);
+	}
 
 
 //=========================================================================
