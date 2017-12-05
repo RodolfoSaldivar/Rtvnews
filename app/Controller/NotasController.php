@@ -27,7 +27,7 @@ class NotasController extends AppController {
 			$data["Nota"]["estatus"] = 1;
 			$nota_id = $this->Nota->save($data["Nota"])["Nota"]["id"];
 
-			//----> Borra de las carpetas y de la BDD todos los archivos que hay
+			//----> Obtiene todas las medias guardadas de la nota
 			$medias_guardadas = $this->Media->find('list', array(
 				'conditions' => array('nota_id' => $nota_id),
 				'fields' => 'id'
@@ -38,12 +38,13 @@ class NotasController extends AppController {
 			{
 				foreach ($medias as $key => $media)
 				{
-					//----> Quita el ide del arreglo para que despues no lo borre
+					//----> Si en el post viene una de las notas guardadas, la quita del arreglo y se salta al siguiente for
 					if (in_array($media["id"], $medias_guardadas))
 					{
 						unset($medias_guardadas[$media["id"]]);
 						continue;
 					}
+
 					if (empty($media["desplegar"]) || empty($media["nombre"])) continue;
 
 					$media["nota_id"] = $nota_id;
@@ -70,6 +71,7 @@ class NotasController extends AppController {
 				}
 			}
 
+			//----> Busca las medias que quedaron en el arreglo de las medias guardadas para despues borrar el archivo del folder y el registro de la BDD
 			$medias_borrar = $this->Media->obtenerTodos(array('id' => $medias_guardadas));
 			if ($medias_borrar)
 			foreach ($medias_borrar as $key => $media)

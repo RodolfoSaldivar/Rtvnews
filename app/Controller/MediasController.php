@@ -35,7 +35,7 @@ class MediasController extends AppController {
 
 	public function ver()
 	{
-		$filename = "5a2579b29429520171204103706La_ardilla_dramatica(youtube.com).mp4";
+		$filename = "20171204183717La_ardilla_dramatica(youtube.com).mp4";
         $name = explode('.', strrev($filename), 2);
         $this->viewClass = 'Media';
 
