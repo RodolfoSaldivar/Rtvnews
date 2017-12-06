@@ -46,8 +46,8 @@ class AppController extends Controller {
                 'action' => 'login'
             ),
             'loginRedirect' => array(
-                'controller' => 'users',
-                'action' => 'index'
+                'controller' => 'notas',
+                'action' => 'guardar'
             ),
             'logoutRedirect' => array(
                 'controller' => 'users',
@@ -138,6 +138,7 @@ class AppController extends Controller {
 
             if (
                 substr($atributo, -3) == "_id" ||
+                substr($atributo, -3) == ".id" ||
                 strval($atributo) == "id"
             )
             {
@@ -191,15 +192,6 @@ class AppController extends Controller {
     {
         return $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER["HTTP_HOST"]."/php/$archivo.php";
     }
-
-
-//=========================================================================
-
-
-    // public function contratoId()
-    // {
-    //     return $this->Session->read("Auth.User.contrato_id");
-    // }
 
 
 //=========================================================================

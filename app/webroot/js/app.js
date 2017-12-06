@@ -100,6 +100,6 @@ function validarSelects(forma, atributos)
 }
 
 // Llamar al toast
-function toast(mensaje, segundos = 5) {
+function toast(mensaje, segundos = 7) {
 	Materialize.toast(mensaje, segundos * 1000)
 }

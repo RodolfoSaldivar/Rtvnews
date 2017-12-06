@@ -37,7 +37,7 @@
 					<a href="/secciones">Secciones</a>
 				</li>
 				<li>
-					<a href="/notas">Notas</a>
+					<a href="/notas/guardar">Notas</a>
 				</li>
 				<li>
 					<a href="/sintesis">Síntesis</a>

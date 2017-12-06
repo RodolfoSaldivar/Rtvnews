@@ -1,10 +1,10 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Cliente Model
+ * Nota Model
  *
  */
-class Cliente extends AppModel {
+class Nota extends AppModel {
 
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -14,9 +14,13 @@ class Cliente extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Media' => array(
-			'className' => 'Media',
-			'foreignKey' => 'media_id'
+		'Seccione' => array(
+			'className' => 'Seccione',
+			'foreignKey' => 'seccione_id'
+		),
+		'Cliente' => array(
+			'className' => 'Cliente',
+			'foreignKey' => 'cliente_id'
 		)
 	);
 
@@ -25,16 +29,15 @@ class Cliente extends AppModel {
  *
  * @var array
  */
-	// public $hasMany = array(
-	// 	'Dirigido' => array(
-	// 		'className' => 'Dirigido',
-	// 		'foreignKey' => 'contacto_id',
-	// 		'dependent' => false
-	// 	)
-	// );
+	public $hasMany = array(
+		'Medias' => array(
+			'className' => 'Medias',
+			'foreignKey' => 'nota_id',
+			'dependent' => false
+		)
+	);
 
 
 //=========================================================================
-
 
 }

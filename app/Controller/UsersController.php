@@ -41,7 +41,7 @@ class UsersController extends AppController {
 			return;
 		}
 
-		$this->redirect("/users");
+		$this->redirect($this->Auth->redirectUrl());
 	}
 	
 
@@ -63,7 +63,7 @@ class UsersController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 
-		if (!$this->request->is('post')) return 0;
+		if (!$this->request->is('post')) return;
 
 		$postdata = file_get_contents("php://input");
 		$data = json_decode($postdata, true);
@@ -94,7 +94,7 @@ class UsersController extends AppController {
 //=========================================================================
 
 
-	public function guardar($id = 0)
+	public function guardar()
 	{
 		$this->layout = 'ajax';
 		$this->autoRender = false;
@@ -131,6 +131,7 @@ class UsersController extends AppController {
 		$users = $this->User->obtenerTodos(array(), array(), array('estatus DESC', 'tipo', 'nombre'));
 
 		// Para que funcione el switch hay que poner booleano en palabras
+		if ($users)
 		foreach ($users as $key => $user)
 		{
 			if ($user["User"]["tipo"] == 1)
@@ -159,7 +160,7 @@ class UsersController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 
-		if (!$this->request->is('post')) return 0;
+		if (!$this->request->is('post')) return;
 
 		$postdata = file_get_contents("php://input");
 		$data = json_decode($postdata, true);
@@ -180,7 +181,7 @@ class UsersController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 
-		if (!$this->request->is('post')) return 0;
+		if (!$this->request->is('post')) return;
 
 		$postdata = file_get_contents("php://input");
 		$data = json_decode($postdata, true);

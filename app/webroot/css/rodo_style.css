@@ -107,7 +107,54 @@ div.titulo-modal {
     color: #ffffff;
 }
 
-#input_logo-error {
+#cl_logo-error {
 	left: 7.75rem;
 	position: relative !important;
+}
+
+input[type="color"] {
+	width: 75px;
+	height: 35px;
+}
+
+.nav-wrapper {
+	background-color: #454545;
+}
+
+.btn, .btn-floating, .switch label input[type=checkbox]:checked+.lever:after {
+    background-color: #e89009;
+}
+
+td a i {
+	color: #e89009;
+}
+
+.switch label input[type=checkbox]:checked+.lever, .btn:hover, .btn-floating:hover {
+    background-color: #ffb54a;
+}
+
+.clase_toast {
+	background-color: #e89009;
+}
+
+#agregar_medias .btn i {
+	font-size: 2.3rem;
+	color: #454545;
+}
+
+#agregar_medias a.btn {
+	background-color: transparent;
+}
+
+.btn-floating.halfway-fab {
+    right: 0px;
+    bottom: -40px;
+}
+
+.picker__date-display, .picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected {
+    background-color: #e89009;
+}
+
+.picker__close, .picker__today, .picker__clear, .picker__day.picker__day--today, .naranja {
+    color: #e89009;
 }

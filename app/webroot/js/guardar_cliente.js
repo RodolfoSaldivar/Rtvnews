@@ -16,14 +16,17 @@ app.controller("ModalGuardarCliente", function($scope, $rootScope, $http)
 		cliente_id = 0
 	)
 	{
+		$scope.editando = 1;
 		$scope.modal_abierto = 1;
 		$('#modal_guardar_cliente').modal('open');
 
-		$http.post("/clientes/obtener", { id: cliente_id })
+		$http.post("/clientes/obtener", { 'Cliente.id': cliente_id })
 		.then(function(response)
 		{
-			$scope.user = response.data.Cliente;
+			$scope.cliente = response.data.Cliente;
 			$("label[for=cl_nombre]").addClass("active");
+			$("input[name='data[Cliente][logo]']").rules('remove', 'required');
+			$('#cl_imagen').attr('src', '/img/logos/'+response.data.Media.nombre);
 			resetSelect();
 		});
     });
@@ -59,9 +62,12 @@ app.controller("ModalGuardarCliente", function($scope, $rootScope, $http)
 	{
 		$scope.$apply(function()
 		{
+			if (!$scope.editando) $("input[name='data[Cliente][logo]']").rules('add', 'required');
 			if ($scope.modal_abierto && abriendo) return;
 			$scope.modal_abierto = 1;
+			$scope.editando = 0;
 			$scope.cliente = {};
+			$('#cl_imagen').removeAttr('src');
 			resetSelect();
 		});	
 	}
@@ -76,7 +82,6 @@ app.controller("ModalGuardarCliente", function($scope, $rootScope, $http)
 
 		    reader.onload = function (e) {
 		        $('#cl_imagen').attr('src', e.target.result);
-		        console.log('e.target: ', e.target);
 		    }
 
 		    reader.readAsDataURL(input.files[0]);
@@ -96,7 +101,7 @@ app.controller("ModalGuardarCliente", function($scope, $rootScope, $http)
 			$(".modal-footer").find("#cargando").removeClass('hide');
 			$("#"+$scope.forma).find("#btn_cancelar").addClass('disabled');
 			$("#"+$scope.forma).find("#btn_guardar").prop('disabled', true);
-			$scope.guardarCliente();
+			$scope.guardarImagen();
 		}
 
 		event.preventDefault();
@@ -104,7 +109,25 @@ app.controller("ModalGuardarCliente", function($scope, $rootScope, $http)
 
 
 
-//----> Ajax para guardar el usuario
+//----> Ajax para guardar la imagen
+	$scope.guardarImagen = function()
+	{
+		if (!$scope.cliente.logo) return $scope.guardarCliente();
+
+		var fd = new FormData();
+		fd.append('file', $scope.cliente.logo);
+
+		$http({
+			method: 'post',
+			url: '/medias/guardar_logo',
+			data: fd,
+			headers: {'Content-Type': undefined},
+		}).then(function(response)
+		{
+			$scope.cliente.media_id = response.data;
+			$scope.guardarCliente();
+		});		
+	}
 
 	$scope.guardarCliente = function()
 	{
@@ -113,13 +136,13 @@ app.controller("ModalGuardarCliente", function($scope, $rootScope, $http)
 		$http.post("/clientes/guardar", { cliente: $scope.cliente })
 		.then(function(response)
 		{
-			// $(".modal-footer").find("#cargando").addClass('hide');
-			// $("#"+$scope.forma).find("#btn_cancelar").removeClass('disabled');
-			// $("#"+$scope.forma).find("#btn_guardar").removeAttr('disabled');
+			$(".modal-footer").find("#cargando").addClass('hide');
+			$("#"+$scope.forma).find("#btn_cancelar").removeClass('disabled');
+			$("#"+$scope.forma).find("#btn_guardar").removeAttr('disabled');
 
-			// $('#modal_guardar_cliente').modal('close');
+			$('#modal_guardar_cliente').modal('close');
 
-			// location.reload();
+			location.reload();
 		});
 	}
 

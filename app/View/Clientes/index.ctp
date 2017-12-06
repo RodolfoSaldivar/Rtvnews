@@ -26,7 +26,7 @@
 
 	<tbody>
 		<tr ng-repeat="(key, cliente) in clientes">
-			<td>{{ cliente.Cliente.media_id }}</td>
+			<td><img width="200" src="/img/logos/{{ cliente.Media.nombre }}"></td>
 			<td>{{ cliente.Cliente.nombre }}</td>
 			<td class="center">
 				<div class="switch">
@@ -46,6 +46,7 @@
 		</tr>
 	</tbody>
 </table>
+<br><br><br>
 
 <?php include $guardar_cliente; ?>
 

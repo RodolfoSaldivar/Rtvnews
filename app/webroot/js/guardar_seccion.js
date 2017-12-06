@@ -1,36 +1,33 @@
 
 
 
-app.controller("ModalGuardarUsuario", function($scope, $rootScope, $http)
+app.controller("ModalGuardarSeccion", function($scope, $rootScope, $http)
 {
 	$(document).ready(function()
 	{
-		$('#modal_guardar_usuario').modal({
+		$('#modal_guardar_secciones').modal({
 			dismissible: false,
 			ready: function() { $scope.inicializar(1); },
 			complete: function() { $scope.inicializar(); }
 		});
 	});
 
-	$rootScope.$on("AbrirModalGuardarUsuario", function(event,
-		usuario_id = 0
+	$rootScope.$on("AbrirModalGuardarSeccion", function(event,
+		seccion_id = 0
 	)
 	{
 		$scope.modal_abierto = 1;
-		$('#modal_guardar_usuario').modal('open');
+		$('#modal_guardar_secciones').modal('open');
 
-		$http.post("/users/obtener", { id: usuario_id })
+		$http.post("/secciones/obtener", { id: seccion_id })
 		.then(function(response)
 		{
-			$scope.user = response.data.User;
-			$("label[for=us_nombre]").addClass("active");
-			$("label[for=us_username]").addClass("active");
-			$("label[for=us_password]").addClass("active");
-			resetSelect();
+			$scope.seccion = response.data.Seccione;
+			$("label[for=se_nombre]").addClass("active");
 		});
     });
 
-	$scope.forma = 'UsuarioGuardarForm';
+	$scope.forma = 'SeccionGuardarForm';
 
 
 //=========================================================================
@@ -38,21 +35,10 @@ app.controller("ModalGuardarUsuario", function($scope, $rootScope, $http)
 
 	$('#'+$scope.forma).validate({
 		rules: {
-			'data[User][nombre]': {
+			'data[Seccione][nombre]': {
 				required: true,
 				alphanumeric: true,
 				maxlength: 100,
-			},
-			'data[User][username]': {
-				required: true,
-				alphanumeric: true,
-				maxlength: 50
-			},
-			'data[User][password]': {
-				required: true,
-				alphanumeric: true,
-				maxlength: 100,
-				minlength: 8
 			}
 		}
 	});
@@ -70,31 +56,8 @@ app.controller("ModalGuardarUsuario", function($scope, $rootScope, $http)
 	{
 		if ($scope.modal_abierto && abriendo) return;
 		$scope.modal_abierto = 1;
-		$scope.user = {tipo:'nada'};
-		resetSelect();
+		$scope.seccion = {color:'#000000'};
 		$scope.$apply();
-	}
-
-
-	$("#us_username").donetyping(function(){
-		$scope.checarUsername();
-	});
-	$scope.checarUsername = function()
-	{
-		$http.post(
-			"/users/checar_username",
-			{
-				nuevo_user: $scope.user.username,
-				actual_user: $scope.actual_user
-			}
-		)
-		.then(function(response)
-		{
-			var data = response.data;
-			$scope.user.username = data.username;
-			$scope.placeholder = data.placeholder;
-			$("#us_username").prop('placeholder', $scope.placeholder);
-		});
 	}
 
 
@@ -102,15 +65,14 @@ app.controller("ModalGuardarUsuario", function($scope, $rootScope, $http)
 //----> Cuando se hace submit; primero valida que todo este lleno y despues manda a guardar
 	$('#'+$scope.forma).submit(function(event)
 	{
-		var selects = validarSelects($scope.forma, $scope.atributos);
 		var inputs = $('#'+$scope.forma).valid();
 
-		if (selects && inputs)
+		if (inputs)
 		{
 			$(".modal-footer").find("#cargando").removeClass('hide');
 			$("#"+$scope.forma).find("#btn_cancelar").addClass('disabled');
 			$("#"+$scope.forma).find("#btn_guardar").prop('disabled', true);
-			$scope.guardarUsuario();
+			$scope.guardarSeccion();
 		}
 
 		event.preventDefault();
@@ -120,18 +82,18 @@ app.controller("ModalGuardarUsuario", function($scope, $rootScope, $http)
 
 //----> Ajax para guardar el usuario
 
-	$scope.guardarUsuario = function()
+	$scope.guardarSeccion = function()
 	{
-		if ($scope.user.id_c) $scope.user.id = $scope.user.id_c;
+		if ($scope.seccion.id_c) $scope.seccion.id = $scope.seccion.id_c;
 
-		$http.post("/users/guardar", { user: $scope.user })
+		$http.post("/secciones/guardar", { seccion: $scope.seccion })
 		.then(function(response)
 		{
 			$(".modal-footer").find("#cargando").addClass('hide');
 			$("#"+$scope.forma).find("#btn_cancelar").removeClass('disabled');
 			$("#"+$scope.forma).find("#btn_guardar").removeAttr('disabled');
 
-			$('#modal_guardar_usuario').modal('close');
+			$('#modal_guardar_secciones').modal('close');
 
 			location.reload();
 		});

@@ -67,6 +67,7 @@ class AppModel extends Model {
 
             if (
                 substr($atributo, -3) == "_id" ||
+                substr($atributo, -3) == ".id" ||
                 strval($atributo) == "id"
             )
             {
@@ -157,26 +158,6 @@ class AppModel extends Model {
 
 		foreach ($result as $key => $value)
 			unset($value["User"]["password"]);
-
-		return $this->cifrarTodo($result);
-	}
-
-
-//=========================================================================
-
-
-	public function obtenerUltimo($condiciones = array(), $campos = array())
-	{
-		$result = $this->find('first', array(
-			'conditions' => $condiciones,
-			'order' => array('id DESC'),
-			'fields' => $campos
-		));
-
-		if(!$result)
-			return 0;
-
-		unset($result["User"]["password"]);
 
 		return $this->cifrarTodo($result);
 	}

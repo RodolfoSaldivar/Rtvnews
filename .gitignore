@@ -23,4 +23,6 @@
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/email.php
+/app/webroot/img/logos
+/app/medias
 /vendors/*
