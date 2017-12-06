@@ -155,6 +155,6 @@ td a i {
     background-color: #e89009;
 }
 
-.picker__close, .picker__today, .picker__clear {
+.picker__close, .picker__today, .picker__clear, .picker__day.picker__day--today, .naranja {
     color: #e89009;
 }

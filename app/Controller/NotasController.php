@@ -34,59 +34,7 @@ class NotasController extends AppController {
 			));
 
 			if (@$data["Media"])
-			foreach ($data["Media"] as $tipo => $medias)
-			{
-				foreach ($medias as $key => $media)
-				{
-					//----> Si en el post viene una de las notas guardadas, la quita del arreglo y se salta al siguiente for
-					if (in_array($media["id"], $medias_guardadas))
-					{
-						unset($medias_guardadas[$media["id"]]);
-						continue;
-					}
-
-					if (empty($media["desplegar"]) || empty($media["nombre"])) continue;
-
-					$media["nota_id"] = $nota_id;
-					$media["tipo"] = $tipo;
-					$ruta = APP.'/medias';
-					if ($tipo == 2 || $tipo == 3 || $tipo == 4)
-					{
-						switch ($tipo)
-						{
-							case 2: $ruta.= '/pdf/'; break;
-							case 3: $ruta.= '/videos/'; break;
-							case 4: $ruta.= '/voz/'; break;
-						}
-						$media["nombre"] = $this->Media->guardarEnCarpeta($media["nombre"], $ruta);
-						$this->Media->create();
-						$this->Media->save($media);
-					}
-
-					if ($tipo == 5)
-					{
-						$this->Media->create();
-						$this->Media->save($media);
-					}
-				}
-			}
-
-			//----> Busca las medias que quedaron en el arreglo de las medias guardadas para despues borrar el archivo del folder y el registro de la BDD
-			$medias_borrar = $this->Media->obtenerTodos(array('id' => $medias_guardadas));
-			if ($medias_borrar)
-			foreach ($medias_borrar as $key => $media)
-			{
-				switch ($media["Media"]["tipo"])
-				{
-					case 2: $tipo = 'pdf'; break;
-					case 3: $tipo = 'videos'; break;
-					case 4: $tipo = 'voz'; break;
-				}
-				$ruta_borrar = APP."/medias/$tipo/".$media["Media"]["nombre"];
-				$file = new File($ruta_borrar);
-				$file->delete();
-				$this->Media->delete($media["Media"]["id"], false);
-			}
+				$this->Media->guardarBorrar($data["Media"], $medias_guardadas, 'nota_id', $nota_id);
 
 			$this->Session->setFlash('Nota guardada exitosamente.');
 			$this->redirect("/notas/guardar");
@@ -102,7 +50,7 @@ class NotasController extends AppController {
 				$nota["Medias"][$media["Media"]["id_c"]] = $media["Media"]["tipo"];
 		}
 		else
-			$nota["Nota"] = array('seccion' => 'nada', 'tipo' => 'nada', 'calificacion' => 'nada');
+			$nota["Nota"] = array('seccione_id_c' => 'nada', 'tipo' => 'nada', 'calificacion' => 'nada');
 
 		$secciones = $this->Seccione->obtenerTodos(array('estatus' => 1));
 		$clientes = $this->Cliente->obtenerTodos(array('estatus' => 1));
@@ -164,6 +112,7 @@ class NotasController extends AppController {
 	{
 		$this->layout = 'ajax';
 		$this->autoRender = false;
+		$this->loadModel("Seccione");
 		$this->loadModel("Media");
 
 		if (!$this->request->is('post')) return;
@@ -172,11 +121,22 @@ class NotasController extends AppController {
 		$data = json_decode($postdata, true);
 		$condiciones = $this->descifrarTodo($data);
 
-		$notas = $this->Nota->obtenerTodos($condiciones);
+		$ultimo_nombre = '';
+		$notas_mandar = array();
+		$notas = $this->Nota->obtenerTodos($condiciones, array(), array('orden', 'seccione_id'));
 		if ($notas)
 		foreach ($notas as $key => $nota)
-			$notas[$key]["Medias"] = $this->Media->obtenerTodos(array('nota_id' => $nota["Nota"]["id"]));
-		echo $this->hacerJson($notas);
+		{
+			$nota["Medias"] = $this->Media->obtenerTodos(array('nota_id' => $nota["Nota"]["id"]));
+			$seccion = $this->Seccione->obtener(array('id' => $nota["Nota"]["seccione_id"]));
+			if ($seccion["Seccione"]["nombre"] != $ultimo_nombre)
+			{
+				$ultimo_nombre = $seccion["Seccione"]["nombre"];
+				$notas_mandar[$ultimo_nombre]["Seccione"] = $seccion["Seccione"];
+			}
+			$notas_mandar[$ultimo_nombre]["Notas"][$nota["Nota"]["id_c"]] = $nota;
+		}
+		echo $this->hacerJson($notas_mandar);
 	}
 
 

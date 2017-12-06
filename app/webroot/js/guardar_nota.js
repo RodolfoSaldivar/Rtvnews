@@ -31,14 +31,13 @@ app.controller("NotasGuardar", function($scope, $rootScope, $http)
 			{
 				var tipo = $scope.variables_php.nota.Medias[arr_m[i]];
 				$scope.appendMedia(tipo, arr_m[i]);
-				$scope.media[tipo]++;
 			}
 		}
 
 		$scope.$apply();
 	});
 
-	$scope.forma = 'NotaIndexForm';
+	$scope.forma = 'NotaGuardarForm';
 
 
 //=========================================================================
@@ -110,7 +109,7 @@ app.controller("NotasGuardar", function($scope, $rootScope, $http)
 			var data = response.data;
 			$("#cliente_no_existe").css("display", "none");
 			$('#cliente_img').attr('src', '/img/logos/'+data.Media.nombre);
-			$scope.nota.cliente_id = data.Cliente.id_c;
+			$scope.nota.cliente_id_c = data.Cliente.id_c;
 		});
 	}
 

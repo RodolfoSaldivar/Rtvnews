@@ -33,9 +33,19 @@ class MediasController extends AppController {
 //=========================================================================
 
 
-	public function ver()
+	public function ver($id_c = 0)
 	{
-		$filename = "20171204183717La_ardilla_dramatica(youtube.com).mp4";
+		$id = $this->descifrar($id_c);
+		$media = $this->Media->obtener(array('id' => $id));
+
+		switch ($media["Media"]["tipo"])
+		{
+			case 2: $tipo = 'pdf'; break;
+			case 3: $tipo = 'videos'; break;
+			case 4: $tipo = 'voz'; break;
+		}
+
+		$filename = $media["Media"]["nombre"];
         $name = explode('.', strrev($filename), 2);
         $this->viewClass = 'Media';
 
@@ -44,7 +54,7 @@ class MediasController extends AppController {
             'name'      => strrev($name[1]),
             'download'  => 0,
             'extension' => strrev($name[0]),
-            'path'      => APP . 'medias\videos' . DS
+            'path'      => APP . "medias/$tipo" . DS
         );
 
         $this->set($params);

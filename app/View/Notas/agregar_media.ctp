@@ -42,6 +42,8 @@
 				<input type="text"
 					id="media_<?php echo $data["tipo"]."_".$data["acum"] ?>"
 					name="<?php echo $data["name"] ?>[nombre]"
+					value="<?php echo @$data["Media"]["nombre"] ?>"
+					<?php if ($data["disabled"]) echo 'disabled' ?>
 				>
 				<label
 					for="media_<?php echo $data["tipo"]."_".$data["acum"] ?>"
