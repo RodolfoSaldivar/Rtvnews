@@ -184,7 +184,7 @@
 
 				&nbsp;&nbsp;&nbsp;
 
-				<button id="btn_guardar" class="btn waves-effect waves-light" type="submit" name="action">
+				<button id="btn_guardar" class="btn waves-effect waves-light disabled" type="submit" name="action">
 					Enviar
 					<i class="material-icons right">mail</i>
 				</button>
